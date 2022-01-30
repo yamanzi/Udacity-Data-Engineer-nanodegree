@@ -1,0 +1,42 @@
+1. Create a library folder in D:\Development\PetProjects\CassandraTut\data
+	Have node1 and node2 folders
+
+2.
+CMD then run the below command
+make sure to change the library to the folder path above
+and change the name of the instance from cas1 to whatever
+
+>>
+docker run --name cas1 -p 9042:9042 -v /Development/PetProjects/CassandraTut/data/node1:/var/lib/cassandra/data -e CASSANDRA_CLUSTER_NAME=MyCluster -e CASSANDRA_ENDPOINT_SNITCH=GossipingPropertyFileSnitch -e CASSANDRA_DC=datacenter1 -d cassandra
+
+Start it
+Check the health if up
+>> docker exec -it cas1  nodetool status
+
+
+3.
+Start another node on the machine
+
+>>
+docker run --name cas2 -v /Development/PetProjects/CassandraTut/data/node2:/var/lib/cassandra/data -e CASSANDRA_SEEDS=172.0.0.1 -e CASSANDRA_CLUSTER_NAME=MyCluster -e CASSANDRA_ENDPOINT_SNITCH=GossipingPropertyFileSnitch -e CASSANDRA_DC=datacenter1 -d cassandra:latest
+
+(it was CASSANDRA_SEEDS="$(docker inspect --format='{{ .NetworkSettings.IPAddress }}' cas1)")
+
+Start it
+Check the health if up
+>> docker exec -it cas1  nodetool status
+
+
+4.
+Execute cql
+docker exec -it cas1  cqlsh
+
+
+5.
+Connect python to IP 172.0.0.1
+
+
+
+
+
+
